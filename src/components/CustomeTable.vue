@@ -39,7 +39,7 @@ const { headers, items } = defineProps({
       </v-card-title>
     </v-card>
     <!-- Rows -->
-          <v-card class="rounded-lg" variant="flat" border="#E4E4E4 sm" v-for="(item, index) in items" :key="index">
+          <v-card class="rounded-lg"  variant="flat" border="#E4E4E4 sm" v-for="(item, index) in items" :key="index">
           <div class="d-flex align-center pa-2">
             <template
               v-for="(header, headerIndex) in headers"
