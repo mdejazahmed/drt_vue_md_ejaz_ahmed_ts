@@ -17,7 +17,7 @@ interface CustomRequestConfig extends AxiosRequestConfig {
 // Create axios instance with type
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000',
-  timeout: 20000,
+  timeout: 50000,
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json'

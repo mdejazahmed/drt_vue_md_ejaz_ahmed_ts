@@ -24,13 +24,13 @@ onMounted(() => {
     style="height: calc(100vh - 300px)"
     v-else
     :headers="appStore.headers"
-    :items="appStore.satellites"
+    :items="appStore.filteredSatellites"
     fixed-header
     :loading="appStore.loading"
     show-select
     v-model="appStore.selectedItems"
     hover
-    :search="appStore.search"
+
     return-object
   >
     <template

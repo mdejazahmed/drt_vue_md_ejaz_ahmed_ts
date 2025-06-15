@@ -1,53 +1,26 @@
 <script setup lang="ts">
 import { useAppStore } from "@/stores/app";
 const appStore = useAppStore();
-const objectTypesList = [
-  {
-    text: "All",
-    value: "ROCKET BODY,PAYLOAD,UNKNOWN,DEBRIS",
-    count: 27893,
-  },
-  {
-    text: "ROCKET BODY",
-    value: "ROCKET BODY",
-    count: 2167,
-  },
-  {
-    text: "PAYLOAD",
-    value: "PAYLOAD",
-    count: 13997,
-  },
-  {
-    text: "UNKNOWN",
-    value: "UNKNOWN",
-    count: 559,
-  },
-  {
-    text: "DEBRIS",
-    value: "DEBRIS",
-    count: 10595,
-  },
-];
-const attributesList = [
-  "noradCatId",
-  "intlDes",
-  "name",
-  "launchDate",
-  "decayDate",
-  "objectType",
-  "launchSiteCode",
-  "countryCode",
-  "orbitCode",
-];
 
-const selectedAttributes = ref(["noradCatId", "intlDes", "name"]);
-const selectedObjectTypes = ref([objectTypesList[0].value]);
-const performSearch = () => {};
-const handleObjectTypeChange = () => {
-  appStore.selectedObjectTypes = selectedObjectTypes.value;
+const menu = ref(false);
+const performSearch = (e) => {
+  const query = e.target.value.toLowerCase();
+  appStore.filteredSatellites = appStore.satellites.filter((satellite) => {
+    return (
+      satellite.name.toLowerCase().includes(query) ||
+      satellite.noradCatId.toLowerCase().includes(query)
+    );
+  });
 };
+
 const getSatellites = () => {
+  menu.value = false;
   appStore.getSatellites();
+};
+const handleAllClick = (value) => {
+  appStore.selectedObjectTypes = value
+    ? appStore.objectTypesList.map((item) => item.value)
+    : [];
 };
 </script>
 <template>
@@ -56,12 +29,11 @@ const getSatellites = () => {
       <v-chip-group
         selected-class="text-primary"
         multiple
-        v-model="selectedObjectTypes"
-        @change="handleObjectTypeChange"
+       :model-value="appStore.selectedObjectTypes"
         mobile
       >
         <v-chip
-          v-for="objectType in objectTypesList"
+          v-for="objectType in appStore.objectTypesList"
           :key="objectType.value"
           :value="objectType.value"
           variant="outlined"
@@ -70,10 +42,10 @@ const getSatellites = () => {
         </v-chip>
       </v-chip-group>
     </v-col>
-    <v-col cols="12" md="6">
+    <v-col cols="12" md="6" class="d-flex align-center gap-2">
       <v-text-field
         color="primary"
-        v-model="appStore.search"
+        v-model.trim="appStore.search"
         variant="outlined"
         type="search"
         density="compact"
@@ -84,31 +56,94 @@ const getSatellites = () => {
         append-inner-icon="mdi-magnify"
         hide-details
       ></v-text-field>
-    </v-col>
-    <v-col cols="12" md="6">
-      <v-autocomplete
-        v-model="selectedAttributes"
-        :items="attributesList"
-        variant="outlined"
-        density="compact"
-        multiple
-        chips
-        clearable
-        label="Select Attributes"
-        rounded
-        color="primary"
-        hide-details
-      ></v-autocomplete>
-    </v-col>
-    <v-col cols="12">
-      <v-btn
-        color="primary"
-        variant="outlined"
-        @click="getSatellites"
-        rounded
-        append-icon="mdi-filter"
-        >Apply Filters</v-btn
-      >
+      <v-menu v-model="menu" :close-on-content-click="false" location="end">
+        <template v-slot:activator="{ props }">
+          <v-btn
+            v-bind="props"
+            variant="text"
+            icon="mdi-filter-outline"
+            color="primary"
+          >
+            <v-badge color="secondary" :content="appStore.appliedFiltersCount">
+              <v-icon>mdi-filter-outline</v-icon>
+            </v-badge>
+          </v-btn>
+        </template>
+
+        <v-card rounded="lg" bg="transparent" width="400">
+          <v-card-text>
+              <div class="text-subtitle-1 font-weight-bold py-2">Object Types</div>
+            <v-row>
+              <v-col cols="12" class="d-flex flex-wrap gap-2">
+                <v-checkbox
+                  :label="`All (${appStore.objectTypesList.reduce(
+                    (acc, crr) => acc + crr.count,
+                    0
+                  )})`"
+                  @update:model-value="handleAllClick"
+                  density="compact"
+                  :model-value="
+                    appStore.selectedObjectTypes.length ===
+                    appStore.objectTypesList.length
+                  "
+                  hide-details
+                ></v-checkbox>
+                <v-checkbox
+                  v-for="objectType in appStore.objectTypesList"
+                  :key="objectType.value"
+                  v-model="appStore.selectedObjectTypes"
+                  :label="`${objectType.text} (${objectType.count})`"
+                  :value="objectType.value"
+                  density="compact"
+                  hide-details
+                ></v-checkbox>
+              </v-col>
+            </v-row>
+            <v-divider></v-divider>
+              <div class="text-subtitle-1 font-weight-bold py-2">Attributes</div>
+            <v-row>
+              <v-col cols="12" class="d-flex flex-wrap gap-2">
+                <v-checkbox
+                  v-for="attribute in appStore.attributesList"
+                  :key="attribute"
+                  v-model="appStore.selectedAttributes"
+                  :label="attribute"
+                  :value="attribute"
+                  density="compact"
+                  hide-details
+                ></v-checkbox>
+              </v-col>
+            </v-row>
+              <v-divider></v-divider>
+              <div class="text-subtitle-1 font-weight-bold py-2">Orbit Code</div>
+            <v-row>
+              <v-col cols="12" class="d-flex flex-wrap gap-2">
+                <v-checkbox
+                  v-for="orbitCode in appStore.orbitCode"
+                  :key="orbitCode"
+                  v-model="appStore.selectedOrbitCode"
+                  :label="orbitCode"
+                  :value="orbitCode"
+                  density="compact"
+                  hide-details
+                ></v-checkbox>
+              </v-col>
+            </v-row>
+          </v-card-text>
+
+          <v-card-actions>
+            <v-btn
+              color="primary"
+              class="w-100"
+              variant="outlined"
+              @click="getSatellites"
+              rounded
+              append-icon="mdi-filter"
+              >Apply Filters</v-btn
+            >
+          </v-card-actions>
+        </v-card>
+      </v-menu>
     </v-col>
   </v-row>
 </template>
