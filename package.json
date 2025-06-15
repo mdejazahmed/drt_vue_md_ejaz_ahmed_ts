@@ -3,13 +3,16 @@
   "private": true,
   "type": "module",
   "version": "0.0.0",
+  "homepage": "https://mdejazahmed.github.io/drt_vue_md_ejaz_ahmed_ts/",
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --build --force",
-    "lint": "eslint . --fix"
+    "lint": "eslint . --fix",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@fontsource/roboto": "5.2.5",
@@ -26,6 +29,7 @@
     "@vue/tsconfig": "^0.7.0",
     "eslint": "^9.23.0",
     "eslint-config-vuetify": "^4.0.0",
+    "gh-pages": "^6.3.0",
     "npm-run-all2": "^7.0.2",
     "pinia": "^3.0.1",
     "sass-embedded": "^1.86.3",

@@ -14,6 +14,7 @@ import { fileURLToPath, URL } from 'node:url'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: process.env.NODE_ENV === 'production' ? '/drt_vue_md_ejaz_ahmed_ts/' : '/',
   plugins: [
     VueRouter({
       dts: 'src/typed-router.d.ts',
