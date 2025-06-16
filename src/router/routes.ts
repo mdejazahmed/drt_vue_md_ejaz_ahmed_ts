@@ -1,7 +1,7 @@
+import type { RouteRecordRaw } from 'vue-router';
+import { ROUTES } from '@/constants/routeKeys';
 
-import defaultLayout from '@/layouts/default.vue'
-import { ROUTES } from '@/constants/routeKeys'
-export const routes = [
+export const routes: RouteRecordRaw[] = [
   {
     path: ROUTES.HOME.path,
     name: ROUTES.HOME.name,
@@ -9,7 +9,7 @@ export const routes = [
     meta: {
       title: 'Home',
       requiresAuth: false,
-      layout: defaultLayout
+      layout: 'default'
     }
   },
   {
@@ -19,10 +19,9 @@ export const routes = [
     meta: {
       title: 'Selected View',
       requiresAuth: false,
-      layout: defaultLayout
+      layout: 'default'
     }
   },
-  // Not Found Route
   {
     path: '/:catchAll(.*)',
     name: '404',
@@ -32,4 +31,4 @@ export const routes = [
       requiresAuth: false
     }
   }
-]
+];

@@ -5,11 +5,18 @@ interface SatelliteParams {
   attributes?: string[];
 }
 
-interface Satellite {
+export interface Satellite {
   noradCatId: string;
   intlDes: string;
   name: string;
   [key: string]: any;
+}
+
+interface ApiResponse<T> {
+  data: T;
+  // Add other response fields if they exist in your API response
+  // e.g., message?: string;
+  // status?: number;
 }
 
 export const satelliteAPI = {
@@ -29,8 +36,8 @@ export const satelliteAPI = {
     const url = `/satellites?${queryParams.toString()}`;
     
     try {
-      const response = await request.get<{ data: Satellite[] }>(url);
-      return response.data;
+      const response = await request.get<ApiResponse<Satellite[]>>(url);
+      return response.data.data; // Access the data property of the response
     } catch (error) {
       console.error('API Error:', error);
       throw error;

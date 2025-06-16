@@ -7,7 +7,7 @@
 // Plugins
 import vuetify from './vuetify'
 import pinia from '../stores'
-import router from '../router/index.js'
+import router from '../router'
 
 // Types
 import type { App } from 'vue'

@@ -1,11 +1,19 @@
 // Utilities
 import { defineStore } from "pinia";
-import { satelliteAPI } from "@/services/api.ts";
+import { satelliteAPI } from "@/services/api";
+import type { Satellite } from "@/types/satellite";
+
+interface Header {
+  title: string;
+  key: string;
+  sortable: boolean;
+}
+
 export const useAppStore = defineStore("app", {
   state: () => ({
-    satellites: [],
-    filteredSatellites: [],
-    selectedItems: [],
+    satellites: [] as Satellite[],
+    filteredSatellites: [] as Satellite[],
+    selectedItems: [] as Satellite[],
     loading: false,
     search: "",
     headers: [
@@ -15,10 +23,10 @@ export const useAppStore = defineStore("app", {
       { title: "Object Type", key: "objectType", sortable: false },
       { title: "Country Code", key: "countryCode", sortable: true },
       { title: "Launch Date", key: "launchDate", sortable: true },
-    ],
-    selectedObjectTypes: ["ROCKET BODY","PAYLOAD","UNKNOWN","DEBRIS"],
+    ] as Header[],
+    selectedObjectTypes: ["ROCKET BODY", "PAYLOAD", "UNKNOWN", "DEBRIS"],
     selectedAttributes: ["noradCatId", "intlDes", "name"],
-    selectedOrbitCode:[],
+    selectedOrbitCode: [] as string[],
     objectTypesList: [
       {
         text: "ROCKET BODY",
@@ -48,9 +56,8 @@ export const useAppStore = defineStore("app", {
       "launchDate",
       "decayDate",
       "objectType",
-      "launchSiteCode",
-      "countryCode",
       "orbitCode",
+      "countryCode",
     ],
     orbitCode: [
       "LEO",
@@ -76,43 +83,47 @@ export const useAppStore = defineStore("app", {
   }),
   actions: {
     async getSatellites() {
-      
       this.loading = true;
       try {
-        const response = await satelliteAPI.getSatellites({
+        const satellites = await satelliteAPI.getSatellites({
           objectTypes: this.selectedObjectTypes,
           attributes: this.selectedAttributes,
         });
-        this.satellites = response.data;
-        this.filteredSatellites = response.data;
+        this.satellites = satellites;
+        this.filteredSatellites = satellites;
       } catch (error) {
-        console.error(error);
+        console.error("Failed to fetch satellites:", error);
+        const snackbarStore = useSnackbarStore();
+        snackbarStore.showSnackbar({
+          color: "error",
+          msg: "Failed to load satellite data. Please try again later.",
+        });
       } finally {
         this.loading = false;
       }
     },
   },
   getters: {
-    appliedFiltersCount(): number {
-      const objectTypesCount = this.selectedObjectTypes.length>0?1:0;
-      const attributesCount = this.selectedAttributes.length>0?1:0;
-      const orbitCodeCount = this.selectedOrbitCode.length>0?1:0;
-      const totalFilters = objectTypesCount + attributesCount + orbitCodeCount;
-     return totalFilters;
-    }
-  }
+    appliedFiltersCount(state): number {
+      const objectTypesCount = state.selectedObjectTypes.length > 0 ? 1 : 0;
+      const attributesCount = state.selectedAttributes.length > 0 ? 1 : 0;
+      const orbitCodeCount = state.selectedOrbitCode.length > 0 ? 1 : 0;
+      return objectTypesCount + attributesCount + orbitCodeCount;
+    },
+  },
 });
+
 export const useSnackbarStore = defineStore("snackbarStore", {
   state: () => ({
     show: false,
     color: "success",
-    msg: "Operation Successful",
+    message: "",
   }),
   actions: {
     showSnackbar({ color = "success", msg = "Operation Successful" }) {
       this.show = true;
       this.color = color;
-      this.msg = msg;
+      this.message = msg;
     },
   },
 });

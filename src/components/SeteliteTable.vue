@@ -3,10 +3,11 @@ import { useAppStore } from "@/stores/app";
 import { useSnackbarStore } from "@/stores/app";
 import { ref } from "vue";
 import { satelliteAPI } from "@/services/api.ts";
+import type { Satellite } from "@/types/satellite";
 const appStore = useAppStore();
 const snackbarStore = useSnackbarStore();
 onMounted(() => {
-  if (appStore.satellites.length == 0) {
+  if (appStore.filteredSatellites.length == 0) {
     appStore.getSatellites();
   }
 });

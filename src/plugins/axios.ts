@@ -1,5 +1,4 @@
-import axios from 'axios';
-import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
+import axios, { type AxiosInstance, type AxiosRequestConfig, type AxiosResponse, type AxiosError, type InternalAxiosRequestConfig } from 'axios';
 import { useSnackbarStore } from "@/stores/app";
 
 // Define interfaces for the response data structure
@@ -7,11 +6,6 @@ interface ApiResponse<T = any> {
   data?: T;
   message?: string;
   [key: string]: any;
-}
-
-// Extend AxiosRequestConfig to include any custom config options
-interface CustomRequestConfig extends AxiosRequestConfig {
-  // Add any custom request config options here
 }
 
 // Create axios instance with type
@@ -26,13 +20,14 @@ const axiosInstance: AxiosInstance = axios.create({
 
 // Request interceptor
 axiosInstance.interceptors.request.use(
-  (config: CustomRequestConfig) => {
+  (config: InternalAxiosRequestConfig) => {
     const token = "token";
     if (token) {
-      config.headers = config.headers || {};
+      if (!config.headers) {
+        config.headers = {} as any;
+      }
       config.headers.Authorization = `Bearer ${token}`;
     }
-    
     return config;
   },
   (error: any) => {

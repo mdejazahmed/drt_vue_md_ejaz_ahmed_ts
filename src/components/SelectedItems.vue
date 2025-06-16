@@ -3,19 +3,23 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { ROUTES } from "@/constants/routeKeys";
 import { useAppStore } from "@/stores/app";
+import type { Satellite } from "@/types/satellite";
+
 const appStore = useAppStore();
 const router = useRouter();
 const emit = defineEmits(["clearSelection", "removeSatellite"]);
 const clearSelection = () => {
   appStore.selectedItems = [];
 };
+
 const proceed = () => {
   localStorage.setItem("selectedSatellites", JSON.stringify(appStore.selectedItems));
-  router.push({ name: ROUTES.SELECTED_VIEW.name });
+  router.push(ROUTES.SELECTED_VIEW.path);
 };
-const removeSatellite = (satellite: any) => {
+
+const removeSatellite = (satellite: Satellite) => {
   appStore.selectedItems = appStore.selectedItems.filter(
-    (item) => item.noradCatId !== satellite.noradCatId
+    (item: Satellite) => item.noradCatId !== satellite.noradCatId
   );
 };
 </script>

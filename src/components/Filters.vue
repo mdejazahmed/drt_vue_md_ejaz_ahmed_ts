@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { useAppStore } from "@/stores/app";
+import type { Satellite } from "@/types/satellite";
 const appStore = useAppStore();
 
 const menu = ref(false);
-const performSearch = (e) => {
-  const query = e.target.value.toLowerCase();
-  appStore.filteredSatellites = appStore.satellites.filter((satellite) => {
+const performSearch = (e:Event) => {
+  const target = e.target as HTMLInputElement;
+  const query = target.value.toLowerCase();
+  appStore.filteredSatellites = appStore.satellites.filter((satellite:Satellite) => {
     return (
       satellite.name.toLowerCase().includes(query) ||
       satellite.noradCatId.toLowerCase().includes(query)
@@ -17,10 +19,14 @@ const getSatellites = () => {
   menu.value = false;
   appStore.getSatellites();
 };
-const handleAllClick = (value) => {
-  appStore.selectedObjectTypes = value
-    ? appStore.objectTypesList.map((item) => item.value)
-    : [];
+const handleAllClick = (value: boolean | null) => {
+  if (value === null) {
+    appStore.selectedObjectTypes = [];
+  } else {
+    appStore.selectedObjectTypes = value
+      ? appStore.objectTypesList.map((item) => item.value)
+      : [];
+  }
 };
 </script>
 <template>
