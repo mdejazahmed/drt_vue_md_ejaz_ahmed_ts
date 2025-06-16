@@ -20,8 +20,8 @@ A modern Vue 3 + TypeScript application for tracking and managing satellite data
 
 1. Clone the repository:
    ```bash
-   git clone [https://github.com/yourusername/digantra-assignment-ts.git](https://github.com/yourusername/digantra-assignment-ts.git)
-   cd digantra-assignment-ts
+   git clone https://github.com/mdejazahmed/drt_vue_md_ejaz_ahmed_ts.
+   cd drt_vue_md_ejaz_ahmed_ts
 
 2. Install dependencies:
    ```bash
