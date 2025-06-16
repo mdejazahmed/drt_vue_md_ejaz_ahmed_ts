@@ -16,7 +16,7 @@ const appStore = useAppStore();
   <v-container style="min-height: 100vh">
     <v-row>
       <v-col cols="12">
-        <h2>Create my asset list</h2>
+        <h2>Create my satellite list</h2>
       </v-col>
       <v-col cols="12" md="4" order-md="2">
         <SelectedItems />

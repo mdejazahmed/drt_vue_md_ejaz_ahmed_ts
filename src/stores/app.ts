@@ -76,8 +76,6 @@ export const useAppStore = defineStore("app", {
   }),
   actions: {
     async getSatellites() {
-      console.log(this.selectedObjectTypes);
-      console.log(this.selectedAttributes);
       
       this.loading = true;
       try {
