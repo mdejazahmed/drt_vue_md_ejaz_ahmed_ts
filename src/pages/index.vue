@@ -13,6 +13,7 @@ const snackbarStore = useSnackbarStore();
 const appStore = useAppStore();
 </script>
 <template>
+  <v-main style="background:url('https://cdn.prod.website-files.com/64b3e49ec17f22371194291a/64f3316d098c06f3f74354ec_Who%20We%20Are_Unlocking%20Potential%20BG.jpg') no-repeat center center/cover;">
   <v-container style="min-height: 100vh">
     <v-row>
       <v-col cols="12">
@@ -34,6 +35,7 @@ const appStore = useAppStore();
       </v-col>
     </v-row>
   </v-container>
+</v-main>
 </template>
 <style scoped>
 .vertical-divider {
